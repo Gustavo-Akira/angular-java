@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row" style="width: 100%;">
+    <div style="height: 100vh;" class="flex col-sm-12 d-flex justify-content-center align-items-center">
+      <form>
+        <div class="alert alert-danger" id="erros" style="display: none;"></div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input #email="ngModel" class="form-control" type="email" [(ngModel)] = "usuario.login" name="login" id="login" placeholder="Informe o email" [ngClass]="{ 'is-invalid': email.invalid }" required>
+              <div *ngIf="email.invalid" class="alert alert-danger">
+                E-mail deve ser informado
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">        
+            <div class="form-group">
+              <label for="senha">Senha</label>
+              <input #senha="ngModel" class="form-control" type="password" [(ngModel)] = "usuario.senha" name="senha" id="senha" placeholder="Informe a senha" [ngClass]="{ 'is-invalid': senha.invalid }" required>
+              <div class="alert alert-danger" *ngIf="senha.invalid" >
+                Senha deve ser informado
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <button class="btn btn-primary" [disabled]="email.invalid||senha.invalid" (click)="login()">Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<table class="table">
+    <thead class="thead-dark">
+        <th scope="col">ID</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Login</th>
+        <th scope="col">Deletar</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let usuario of usuarios">
+            <td>{{usuario.id}}</td>
+            <td>{{usuario.nome}}</td>
+            <td>{{usuario.login}}</td>
+            <td><button (click) = "deletaUsuario(usuario.id)" class="btn btn-danger">Deletar</button></td>
+        </tr>
+    </tbody>
+</table>
