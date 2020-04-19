@@ -17,4 +17,11 @@ export class AppComponent implements OnInit {
       this.routes.navigate(['login']);
     }
   }
+  public esconderNav(): boolean{
+    if (localStorage.getItem('token') == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

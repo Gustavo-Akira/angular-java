@@ -9,35 +9,52 @@ import {ModuleWithProviders} from '@angular/compiler/src/core';
 import { LoginComponent } from './login/login.component';
 import { HttpInterceptorModule } from './service/header-interceptor.service';
 import { UsuarioComponent } from './component/usuario/usuario.component';
+import { UsuarioAddComponent } from './component/usuario-add/usuario-add/usuario-add.component';
+import { GuardiaoGuard } from './service/guardiao.guard';
+import {NgxMaskModule, IConfig} from 'ngx-mask';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgxCurrencyModule} from 'ngx-currency';
 export const appRouters: Routes = [
   {
-    path: 'home', component: HomeComponent
+    path: 'home', component: HomeComponent, canActivate: [GuardiaoGuard]
   },
   {
     path: 'login', component: LoginComponent
   },
   {
-    path: 'usuario/list', component: UsuarioComponent
+    path: 'usuario/list', component: UsuarioComponent, canActivate: [GuardiaoGuard]
+  },
+  {
+    path: 'usuario/add', component: UsuarioAddComponent, canActivate: [GuardiaoGuard]
+  },
+  {
+    path: 'usuario/add/:id', component: UsuarioAddComponent, canActivate: [GuardiaoGuard]
   }
 ];
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(appRouters);
-
+export const optionMask: Partial<IConfig> | (() => Partial<IConfig>) = {};
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    UsuarioAddComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     routes,
-    HttpInterceptorModule
+    HttpInterceptorModule,
+    NgxMaskModule.forRoot(optionMask),
+    NgxPaginationModule,
+    NgbModule.forRoot(),
+    NgxCurrencyModule
   ],
-  providers: [],
-  bootstrap: [AppComponent, LoginComponent, HomeComponent]
+  providers: [NgbModule],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

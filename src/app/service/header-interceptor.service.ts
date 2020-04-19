@@ -1,9 +1,12 @@
 import { Injectable, NgModule } from '@angular/core';
-import { HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
+import {throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class HeaderInterceptorService implements HttpInterceptor {
   intercept(req: import("@angular/common/http").HttpRequest<any>, next: import("@angular/common/http").HttpHandler): import("rxjs").Observable<import("@angular/common/http").HttpEvent<any>> {
     if (localStorage.getItem('token') != null) {
@@ -11,13 +14,31 @@ export class HeaderInterceptorService implements HttpInterceptor {
       const tokenRequest = req.clone({
         headers: req.headers.set('Authorization', token),
       });
-      return next.handle(tokenRequest);
+      return next.handle(tokenRequest).pipe(
+        tap((event: HttpEvent<any>) => {
+          if (event instanceof HttpResponse && (event.status == 200 || event.status === 201)){
+            console.info('Sucesso na operação');
+          }
+        })
+      );
     } else {
-      return next.handle(req);
+      return next.handle(req).pipe(catchError(this.processaErrors));
     }
   }
 
   constructor() { }
+
+  processaErrors(errors: HttpErrorResponse) {
+      let errorMessage = 'Erro desconhecido';
+      if (errors.error instanceof ErrorEvent){
+        console.error(errors.error);
+        errorMessage = 'Error:' + errors.error.error;
+      } else {
+        errorMessage = 'Codigo' + errors.error.code + '\nMensagem ' + errors.error.error;
+      }
+      alert(errorMessage);
+      return throwError(errorMessage);
+  }
 }
 @NgModule({
   providers: [{

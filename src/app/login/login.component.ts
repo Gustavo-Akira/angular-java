@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginServiceService } from '../service/login-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +11,17 @@ export class LoginComponent implements OnInit {
   title = 'alexa';
   usuario = {login: '', senha: ''};
   ngOnInit(): void {
+    if (localStorage.getItem('token') != null && localStorage.getItem('token').toString().trim() != null) {
+      this.router.navigate(['/home']);
+    }
   }
 
-   constructor(private loginService: LoginServiceService){}
+   constructor(private loginService: LoginServiceService, private router: Router) {}
     public login(){
       this.loginService.login(this.usuario);
     }
-
+    public recuperar(){
+      this.loginService.recuperar(this.usuario.login);
+    }
 
 }

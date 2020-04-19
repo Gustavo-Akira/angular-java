@@ -1,16 +1,53 @@
+<form action="">
+    <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" [(ngModel)]="nome" name="nome" id="nome">
+    </div>
+    <div class="form-group">
+        <button type="button" (click) = "consultarUser()" class="btn btn-success">Procurar</button>
+    </div>
+    <button [routerLink]="['/usuario/add']" class="btn btn-success">Novo</button>
+    <button (click) = "imprimeRelatorio()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">pdf</button>
+</form>
 <table class="table">
     <thead class="thead-dark">
         <th scope="col">ID</th>
         <th scope="col">Nome</th>
         <th scope="col">Login</th>
+        <th scope="col">Cpf</th>
         <th scope="col">Deletar</th>
+        <th scope="col">Editar</th>
     </thead>
     <tbody>
-        <tr *ngFor="let usuario of usuarios">
+        <tr *ngFor="let usuario of usuarios | paginate:{itemsPerPage:5,currentPage:p, totalItems: total};let i = index">
             <td>{{usuario.id}}</td>
             <td>{{usuario.nome}}</td>
             <td>{{usuario.login}}</td>
-            <td><button (click) = "deletaUsuario(usuario.id)" class="btn btn-danger">Deletar</button></td>
+            <td>{{usuario.cpf | mask:'000.000.000-00'}}</td>
+            <td><button (click) = "deletaUsuario(usuario.id,i)" class="btn btn-danger">Deletar</button></td>
+            <td><button [routerLink]="['/usuario/add',usuario.id]" class="btn btn-primary">Editar</button></td>
         </tr>
     </tbody>
 </table>
+<div class="text-center">
+    <pagination-controls (pageChange)="carregarPagina(p = $event);" previousLabel = "Voltar" nextLabel = "Avançar" responsive="true"></pagination-controls>
+</div>
+<div id="modal" class="modal fade" role="dialog"  style="min-width: 100vw;height: 100vh;">
+  <div class="modal-dialog" style="min-width: 90vw;height: 90vh;">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="min-width: 90vw;height: 90vh;">
+      <div class="modal-header">
+        <h1>Some text</h1>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <iframe id="iframe" style="width: 100%;height:400px;" frameborder="0" allowTransparency="true"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
